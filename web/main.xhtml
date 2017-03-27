@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <title>Cookiestore</title>
+        </h:head>
+
+        <h:body>            
+            <h:form>     
+                
+                <p:growl id="growl" life="2000" />
+                
+                <p:tabMenu activeIndex="1">
+                    <p:menuitem value="Start" outcome="index">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Angebot" outcome="main">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="Bestellung" outcome="order">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                </p:tabMenu>
+                
+                <p:panel style="width:70%; float:left">
+                    <p:dataScroller id="data" value="#{CookieView.cookies()}" var="item" chunkSize="10">
+                        <f:facet name="header">
+                            Unser Angebot
+                        </f:facet>
+
+                        <h:panelGrid columns="3" style="width:100%" columnClasses="image,detail,button">
+                            <p:graphicImage width="100" height="100" value="resources/cookie_types/#{item.name}.jpg" alt="Kein Bild" />
+                            
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <h:outputText value="Id:" />
+                                <h:outputText value="#{item.id}" style="font-weight: bold" />
+
+                                <h:outputText value="Name:" />
+                                <h:outputText value="#{item.name}" style="font-weight: bold" />
+
+                                <h:outputText value="Preis:" />
+                                <h:outputText value="#{item.price}" style="font-weight: bold" />
+
+                                <h:outputText value="Anzahl:" />
+                                <h:outputText value="#{item.count}" style="font-weight: bold" />
+                            </h:panelGrid>  
+
+                            <h:panelGrid id="toOrder" style="float:right" columns="2" cellpadding="5">
+                                <h:outputText value="Anzahl:" />
+                                <p:inputText value="#{CookieView.orderCount}" />
+                                
+                                <p:commandButton value="Bestellen" process="@this toOrder" update="@form" action="#{CookieView.orderCookieButton(item.id)}" />
+                            </h:panelGrid>
+                        </h:panelGrid>
+                        
+                        <p:separator />
+                        
+                    </p:dataScroller>
+                </p:panel>
+
+                <p:panel style="width:28%; float:right">
+                    <f:facet name="header">
+                        Info
+                    </f:facet>
+                    
+                    <h:outputText value="Wilkommen im Luto Cookiestore! In diesem Bereich können Sie 
+                                  Cookies bestellen, hinzufügen oder löschen. Um Cookies zu bestellen
+                                  treffen Sie links einfach eine Auswahl und klicken Sie auf Bestellen.
+                                  Um Cookies hinzuzufügen, geben Sie unten die Details ein und drücken Sie hinzufügen.
+                                  Cookies werden gelöscht indem Sie die Id eingeben und löschen betätigen." />
+
+                    <p:separator /> 
+                    
+                    <h:panelGrid columns="2" id="toAdd">                 
+                        <h:outputText value="Name: " />
+                        <p:inputText value="#{CookieView.toAddName}" />
+                 
+                        <h:outputText value="Preis: " />
+                        <p:inputText value="#{CookieView.toAddPrice}" />
+              
+                        <h:outputText value="Anzahl: " />
+                        <p:inputText value="#{CookieView.toAddCount}" />
+                    </h:panelGrid>
+                    <br />
+                    <p:commandButton value="Hinzufügen" process="@this toAdd" update="@form" action="#{CookieView.addCookieButton()}" />
+                    
+                    <p:separator />  
+                    
+                    <h:panelGrid columns="2" id="toDelete">
+                        <h:outputText value="Id: " />
+                        <p:inputText value="#{CookieView.idToDelete}" />
+                    </h:panelGrid>
+                    <br />
+                    <p:commandButton value="Löschen" process="@this toDelete" update="@form" action="#{CookieView.deleteCookieButton()}" />
+                </p:panel>
+                    
+            </h:form>
+        </h:body>
+    </f:view>
+</html>
